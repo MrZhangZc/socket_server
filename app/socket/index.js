@@ -1,4 +1,6 @@
+const redis = require('../util/redis')
 const Chat = require("../model/chat");
+const { Chat_List } = require('../util/key')
 // 当前在线人数
 let count = 0;
 // 总访客人数
@@ -15,23 +17,9 @@ const socketServer = server => {
     totalCount++;
     console.log("count:" + count);
 
-    socket.on("disconnect", function() {
-      // console.log(message.name, '离开了')
-      count--
-      // onLine = onLine.filter(item => )
-      console.log("user disconnected", count);
-    });
-
-    //Someone is typing
-    socket.on("typing", data => {
-      socket.broadcast.emit("notifyTyping", {
-        user: data.user,
-        message: data.message
-      });
-    });
-
-    socket.on("join", function(message) {
+    socket.on("join", async function(message) {
       name = message.name;
+      await redis.hset(Chat_List, socket.id, JSON.stringify({name, avatar: message.avatar}))
       console.log(name + "加入了群聊");
       onLine.push({
         name: name,
@@ -43,8 +31,24 @@ const socketServer = server => {
         action: "加入了群聊",
         count: count
       });
+      const list = await redis.hgetall(Chat_List)
       socket.emit("joinNoticeSelf", {
-        onLineList: onLine
+        onLineList: list
+      });
+    });
+
+    socket.on("disconnect", function() {
+      redis.hdel(Chat_List, socket.id)
+      count--
+      // onLine = onLine.filter(item => )
+      console.log("user disconnected", count);
+    });
+
+    //Someone is typing
+    socket.on("typing", data => {
+      socket.broadcast.emit("notifyTyping", {
+        user: data.user,
+        message: data.message
       });
     });
 
