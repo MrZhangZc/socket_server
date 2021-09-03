@@ -1,12 +1,13 @@
 {
   "name": "socket_server",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "repository": "https://github.com/MrZhangZc/socket_server.git",
   "author": "zzc <1761997216@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "pm2-docker-prod": "pm2-runtime start up.yml"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
