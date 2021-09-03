@@ -5,9 +5,7 @@ WORKDIR /app
 COPY package.json yarn.lock index.js /app/
 COPY app/ /app/app
 
-RUN yarn install \
-    && yarn cache clean \
-    && yarn build
+RUN yarn install
 
 COPY up.yml /app/
 
