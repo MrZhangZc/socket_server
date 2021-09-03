@@ -18,6 +18,7 @@ const socketServer = server => {
       const res = await redis.hexists(Chat_List, socket.id)
       if(!res) count++;
       name = message.name;
+      console.log('加入群聊：', name)
       await redis.hset(Chat_List, socket.id, JSON.stringify({name, avatar: message.avatar}))
       const list = await redis.hgetall(Chat_List)
       socket.broadcast.emit("joinNoticeOther", {
@@ -39,6 +40,7 @@ const socketServer = server => {
         await redis.hdel(Chat_List, socket.id)
         count--
         const list = await redis.hgetall(Chat_List)
+        console.log('离开群聊：', name)
         socket.broadcast.emit("joinNoticeOther", {
           name: name,
           action: "离开了群聊",

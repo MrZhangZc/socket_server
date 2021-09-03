@@ -1,6 +1,6 @@
 {
   "name": "socket_server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "repository": "https://github.com/MrZhangZc/socket_server.git",
   "author": "zzc <1761997216@qq.com>",
